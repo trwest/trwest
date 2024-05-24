@@ -1,0 +1,54 @@
+
+        # 表格
+        columns_bt_download = ("来源名称", "是否有效","播放地址")
+        treeview_bt_download = ttk.Treeview(frame_l_bt_download, height=10, show="headings", columns=columns_bt_download)
+        treeview_bt_download.column("来源名称", width=90, anchor='center')
+        treeview_bt_download.column("是否有效", width=80, anchor='center')
+        treeview_bt_download.column("播放地址", width=120, anchor='center')
+        treeview_bt_download.heading("来源名称", text="来源名称")
+        treeview_bt_download.heading("是否有效", text="是否有效")
+        treeview_bt_download.heading("播放地址", text="播放地址")
+
+        #垂直滚动条
+        vbar_bt_download = ttk.Scrollbar(frame_r_bt_download, command=treeview_bt_download.yview)
+        treeview_bt_download.configure(yscrollcommand=vbar_bt_download.set)
+
+        treeview_bt_download.pack()
+        self.treeview_bt_download = treeview_bt_download
+        vbar_bt_download.pack(side=RIGHT, fill=Y)
+        self.vbar_bt_download = vbar_bt_download
+
+        # 框架的位置布局
+        frame_l_bt_download.grid(row=0, column=0, sticky=NSEW)
+        frame_r_bt_download.grid(row=0, column=1, sticky=NS)
+        frame_root_bt_download.place(x=5, y=0)
+
+        # BT下载布局结束
+
+
+
+
+
+        #项目的一些信息
+        ft = font.Font(size=14, weight=font.BOLD)
+        project_statement = Label(root, text="1.鼠标双击可打开相应的链接, 2.点击初始化按钮后将显示完整信息", fg='#FF0000', font=ft,anchor=NW)
+        project_statement.place(x=5, y=540)
+        self.project_statement = project_statement
+
+
+
+        #绑定事件
+        treeview.bind('<<TreeviewSelect>>', self.show_movie_data)  # 表格绑定选择事件
+        treeview.bind('<Double-1>', self.open_in_browser_douban_url)  # 表格绑定鼠标左键事件
+        treeview_play_online.bind('<Double-1>', self.open_in_browser)  # 表格绑定左键双击事件
+        treeview_save_cloud_disk.bind('<Double-1>', self.open_in_browser_cloud_disk)  # 表格绑定左键双击事件
+        treeview_bt_download.bind('<Double-1>', self.open_in_browser_bt_download)  # 表格绑定左键双击事件
+        B_0.configure(command=lambda:thread_it(self.searh_movie_in_rating)) #按钮绑定单击事件
+        B_0_keyword.configure(command=lambda:thread_it(self.searh_movie_in_keyword)) #按钮绑定单击事件
+        B_0_imdb.configure(command=lambda: thread_it(self.show_IDMB_rating))  # 按钮绑定单击事件
+        T_vote_keyword.bind('<Return>', handlerAdaptor(self.keyboard_T_vote_keyword))  # 文本框绑定选择事件
+        project_statement.bind('<ButtonPress-1>', self.project_statement_show)  # 标签绑定鼠标单击事件
+        project_statement.bind('<Enter>', self.project_statement_get_focus)  # 标签绑定获得焦点事件
+        project_statement.bind('<Leave>', self.project_statement_lose_focus)  # 标签绑定失去焦点事件
+
+        root.mainloop()
