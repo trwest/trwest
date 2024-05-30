@@ -1,0 +1,97 @@
+import random                           # 随机函数模块
+import pyttsx3                          # 文字转语音模块
+from pygame import mixer                # mp3播放模块
+from math import sin, cos, pi, log      # 核心模块，数学函数
+from tkinter import *                   # 窗口主体模块
+ 
+ 
+CANVAS_WIDTH = 1920   # 画布的宽
+CANVAS_HEIGHT = 1080  # 画布的高
+CANVAS_CENTER_X = CANVAS_WIDTH / 2   # 画布中心的X轴坐标
+CANVAS_CENTER_Y = CANVAS_HEIGHT / 2  # 画布中心的Y轴坐标
+IMAGE_ENLARGE = 15  # 放大比例
+HEART_COLOR = "#Fd789f"  # 心的颜色，少女粉
+ 
+ 
+def speak_voice(message, speak_mode=0):
+    """
+    “文字转语音”
+    :param message: 文本消息
+    :param speak_mode: 语音包，0 中文女声，1 英文女声，2 英文男声
+    """
+    # 初始化
+    engine = pyttsx3.init()
+    voices = engine.getProperty('voices')
+ 
+    # 改变语速  范围为0-200   默认值为200
+    rate = engine.getProperty('rate')
+    engine.setProperty('rate', rate - 100)
+ 
+    # 设置音量  范围为0.0-1.0  默认值为1.0
+    engine.setProperty('volume', 0.8)
+ 
+    # 设置发音人,目前只有0可以说中文
+    engine.setProperty('voice', voices[speak_mode].id)
+ 
+    # 预设要朗读的文本数据
+    engine.say(message)
+ 
+    # 读出声音
+    engine.runAndWait()
+ 
+ 
+def heart_voice(file_path, playback_mode=-1):
+    """
+    “噗噗的心跳声”
+    :param file_path: mp3文件路径
+    :param playback_mode: 播放模式，-1 为循环播放
+    """
+    # 初始化
+    mixer.init()
+ 
+    # 加载文件路径
+    mixer.music.load(file_path)
+ 
+    # 播放mp3文件
+    mixer.music.play(playback_mode)
+ 
+ 
+def heart_function(t, shrink_ratio: float = IMAGE_ENLARGE):
+    """
+    “爱心函数生成器”
+    :param shrink_ratio: 放大比例
+    :param t: 参数
+    :return: 坐标
+    """
+    # 基础函数
+    x = 16 * (sin(t) ** 3)
+    y = -(13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t))
+ 
+    # 放大
+    x *= shrink_ratio
+    y *= shrink_ratio
+ 
+    # 移到画布中央
+    x += CANVAS_CENTER_X
+    y += CANVAS_CENTER_Y
+ 
+    return int(x), int(y)
+ 
+ 
+def scatter_inside(x, y, beta=0.15):
+    """
+    随机内部扩散
+    :param x: 原x
+    :param y: 原y
+    :param beta: 强度
+    :return: 新坐标
+    """
+    ratio_x = - beta * log(random.random())
+    ratio_y = - beta * log(random.random())
+ 
+    dx = ratio_x * (x - CANVAS_CENTER_X)
+    dy = ratio_y * (y - CANVAS_CENTER_Y)
+ 
+    return x - dx, y - dy
+ 
+ 
