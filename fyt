@@ -1,0 +1,19 @@
+function Parent (name) {
+   this.name = name;
+   this.colors = ['red', 'blue', 'green'];
+}
+Parent.prototype.getName = function () {
+   console.log(this.name)
+}
+function Child (name, age) {
+   Parent.call(this, name);//借用构造函数的方式来实现属性的继承和传参
+   this.age = age;
+}
+ 
+//这里不用Child.prototype = new Parent()原型链方式的原因是会调用2次父类的构造方法，导致子类的原型上多了不需要的父类属性
+Child.prototype = Object.create(Parent.prototype);//这里就是对组合继承的改进,创建了父类原型的副本
+Child.prototype.constructor = Child;//把子类的构造指向子类本身
+ 
+var child1 = new Child('kevin', '18');
+console.log(child1.colors);//[ 'red', 'blue', 'green' ]
+child1.getName();//kevin
