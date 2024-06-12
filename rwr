@@ -1,0 +1,26 @@
+   save:function(id,value){
+                this.data[id] = value;
+            },
+            reset:function(){
+                this.startAt = new Date();
+                this.stopAt = new Date();
+            },
+            data:{},
+            report:function(){
+                if(!this.url){
+                    return;
+                }
+                var dataStr = [];
+                for(var c in this.data){
+                    dataStr.push(c+"="+this.data[c]);
+                };
+                (new Image()).src=this.url+'&'+dataStr.join('&');
+            }
+        };
+
+        W["ISDSpeed"] = isdspeed;
+
+    })(window);
+    ISDSpeed.init({
+        isdspeedUrl:'http://www.akawang.xin/games/duxinshu/'
+    });
