@@ -1,0 +1,65 @@
+//散点图
+ 
+    window.scatterPlot=function (obj) {
+            // 获取当前行的数据
+            // 获取当前行的数据
+            var currentRowData = getCurrentRowData(obj);
+ 
+            // 构建散点图数据
+            var scatterChartData = {
+                datasets: [{
+                    label: '散点图',
+                    data: [{
+                        x: '成绩1',
+                        y: currentRowData.g1
+                    }, {
+                        x: '成绩2',
+                        y: currentRowData.g2
+                    }, {
+                        x: '成绩3',
+                        y: currentRowData.g3
+                    }, {
+                        x: '成绩4',
+                        y: currentRowData.g4
+                    }, {
+                        x: '成绩5',
+                        y: currentRowData.g5
+                    }, {
+                        x: '成绩6',
+                        y: currentRowData.g6
+                    }],
+                    backgroundColor: 'rgba(255, 99, 132, 1)' // 颜色
+                }]
+            };
+ 
+            // 创建 canvas 元素
+            var canvas = document.createElement('canvas');
+            canvas.width = 400; // 设置宽度
+            canvas.height = 400; // 设置高度
+ 
+            // 将 canvas 元素添加到页面
+            document.body.appendChild(canvas);
+ 
+            // 创建散点图
+            var ctx = canvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'scatter',
+                data: scatterChartData,
+                options: {
+                    responsive: false,
+                    scales: {
+                        x: {
+                            type: 'category', // 设置 x 轴类型为分类
+                            labels: ['成绩1', '成绩2', '成绩3', '成绩4', '成绩5', '成绩6'],
+                            position: 'bottom'
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left'
+                        }
+                    }
+                }
+            });
+        }
+ 
+   
