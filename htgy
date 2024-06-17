@@ -1,0 +1,59 @@
+
+        print(u'正在统计好友签名数据，进度%d/%d，请耐心等待……' % (index + 1, len(data)))
+
+        if(word in signature_dict.keys()):
+            signature_dict[word] += 1
+        else:
+            signature_dict[word] = 1
+
+    # 开始绘制词云
+    name = [x for x in signature_dict.keys()]
+    value = [x for x in signature_dict.values()]
+    wordcloud = WordCloud()
+    wordcloud.add('微信好友个性签名词云图', [list(z) for z in zip(name, value)], word_size_range=[1,100], shape='star')
+    wordcloud.render('data/好友个性签名词云.html')
+
+
+# 下载好友头像，此步骤消耗时间比较长
+def download_head_image(thread_name):
+
+    # 队列不为空的情况
+    while(not queue_head_image.empty()):
+        # 取出一个好友元素
+        user = queue_head_image.get()
+
+        # 下载该好友头像，并保存到指定位置，生成一个15位数的随机字符串
+        random_file_name = ''.join([str(random.randint(0,9)) for x in range(15)])
+        user.get_avatar(save_path='image/' + random_file_name + '.jpg')
+
+        # 输出提示
+        print(u'线程%d:正在下载微信好友头像数据，进度%d/%d，请耐心等待……' %(thread_name, len(friends)-queue_head_image.qsize(), len(friends)))
+
+
+
+
+# 生成一个html文件，并保存到文件file_name中
+def generate_html(file_name):
+    with open(file_name, 'w', encoding='utf-8') as f:
+        data = '''
+            <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+            <meta charset="UTF-8">
+            <title>一键生成微信个人专属数据报告(了解你的微信社交历史)</title>
+            <meta name='keywords' content='微信个人数据'>
+            <meta name='description' content=''> 
+
+            
+            <iframe name="iframe1" marginwidth=0 marginheight=0 width=100% height=60% src="data/好友地区分布.html" frameborder=0></iframe>
+            <iframe name="iframe2" marginwidth=0 marginheight=0 width=100% height=60% src="data/某省好友地区分布.html" frameborder=0></iframe>
+            <iframe name="iframe3" marginwidth=0 marginheight=0 width=100% height=60% src="data/好友性别比例.html" frameborder=0></iframe>
+            <iframe name="iframe4" marginwidth=0 marginheight=0 width=100% height=60% src="data/你认识的好友比例.html" frameborder=0></iframe>
+            <iframe name="iframe5" marginwidth=0 marginheight=0 width=100% height=60% src="data/你最亲密的人.html" frameborder=0></iframe>
+            <iframe name="iframe6" marginwidth=0 marginheight=0 width=100% height=60% src="data/特殊好友分析.html" frameborder=0></iframe>
+            <iframe name="iframe7" marginwidth=0 marginheight=0 width=100% height=60% src="data/共同所在群聊分析.html" frameborder=0></iframe>
+            <iframe name="iframe8" marginwidth=0 marginheight=0 width=100% height=60% src="data/好友个性签名词云.html" frameborder=0></iframe>
+            <iframe name="iframe9" marginwidth=0 marginheight=0 width=100% height=60% src="data/微信好友头像拼接图.html" frameborder=0></iframe>
+            <iframe name="iframe10" marginwidth=0 marginheight=0 width=100% height=60% src="data/使用人脸的微信好友头像拼接图.html" frameborder=0></iframe>
+        '''
+        f.write(data)
+
+
