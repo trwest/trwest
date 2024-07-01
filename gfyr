@@ -1,0 +1,24 @@
+    connect(timer,&QTimer::timeout,[=](){
+        /* 获取当前日期 */
+        QDate date = QDate::currentDate();//获取当前日期
+        QString date_msg = QString("%1-%2-%3").arg(date.year()).arg(date.month()).arg(date.day());
+        date_label->setText(date_msg);
+ 
+        // 获取系统当前时间
+        QDateTime dateTime = QDateTime::currentDateTime();
+        // 显示的内容
+        m_pLCD->display(dateTime.toString("HH:mm:ss"));
+ 
+ 
+        /* 判断进程状态 */
+        if(my_pro->state() == QProcess::NotRunning)
+        {
+            this->show();//重新显示窗口
+        }
+        else
+        {
+            this->hide();
+        }
+ 
+    });
+ 
